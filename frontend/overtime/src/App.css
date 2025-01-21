@@ -1,0 +1,52 @@
+*{
+  font-family: sans-serif !important;
+}
+.App {
+  text-align: center;
+}
+
+.welcomesiteNavbar{
+  height: 75px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.welcomsiteNavbarImage{
+  position: absolute;
+  left: 15px;
+}
+
+button, .welcomesiteNavbar{
+  background-color: #e20074 !important;
+}
+button{
+  border: none !important;
+}
+.navbarLink{
+  transition: 200ms ease-in-out 0s;
+}
+
+.navbarLink:hover{
+  color: #fc97cb!important;
+}
+
+/*Táblázat*/
+
+td, tr {
+  font-size: 12px;
+}
+.alertParent{
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.deleteAlert{
+  background-color: #fde1f0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #fc99cc;
+  color: #c40266;
+}
