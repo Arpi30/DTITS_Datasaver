@@ -16,6 +16,7 @@ const resetPassword = require('./Routes/ResetPassword/resetPassword')
 const profile = require('./Routes/Profile/profile');
 const delOvertime = require('./Routes/Overtime/delOvertime')
 const approvedItem = require('./Routes/Overtime/approve')
+const updateData = require('./Routes/updateData/updateData')
 // Regex validation 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const emeaRegex = /^\d{9}$/;
@@ -84,6 +85,10 @@ app.delete('/profile/bulk', (req, res) => {
 // Engedélyeztetés
 app.post('/approve', (req, res) => {
     approvedItem.approveItem(req, res, con)
+})
+// adat módosítás
+app.post('/updateData', (req, res) => {
+    updateData.updateData(req, res, con)
 })
 
 // Minden egyéb útvonal kiszolgálása (React routing támogatás)

@@ -89,7 +89,6 @@ export const Profile = ({user}) => {
             setMessage({ message: "Nincs kijelölendő sor!" });
             return; 
         }
-
         try {
             const response = await fetchData("http://localhost:3001/approve", "POST", selectedRows[0]);
             
@@ -154,9 +153,7 @@ export const Profile = ({user}) => {
 
     
     
-    console.log(selectedRows );
-    
-    
+
     return (
         <div style={{height: "100vh"}} className="d-flex flex-column mx-5 align-items-center">
             <div className="my-5 w-100 d-flex align-items-start">
@@ -191,14 +188,28 @@ export const Profile = ({user}) => {
                         selectedRowsWithCheckbox={selectedRowsWithCheckbox}
                         approveItem={approveItem}
                         deleteItemHandler={() => {
-                            selectedRows.length > 1 ? alert("You can delete only one item of row!") : deleteHandler(selectedRows[0])
+                            selectedRows.length > 1 ? setMessage({message: "Egyszerre csak egy sort lehet törölni!"}) : deleteHandler(selectedRows[0])
                         }}
                         deleteItemsHandler={() => {
-                            selectedRows.length <= 1 ? alert("You can delete more then one item of row!") : deleteHandler(selectedRows)
+                            selectedRows.length <= 1 ? setMessage({message: "Egyszerre több sort lehet törölni!"}) : deleteHandler(selectedRows)
 
                         }}
                     />}
-                    {(selectedRows.length == 1 && show) && <EditDataTable handleClose={() => setShow(false)} show={show} user={selectedRows[0]}/>}                                  
+                    {(selectedRows.length == 1 && show && selectedRows[0]) && <EditDataTable 
+                                                                                    handleClose={() => setShow(false)} 
+                                                                                    show={show} 
+                                                                                    user={selectedRows[0]}
+                                                                                    onUpdate={(updatedUser) => {
+                                                                                        console.log(updatedUser);
+                                                                                        
+                                                                                        setResponseData((prevData) => ({ 
+                                                                                            ...prevData,
+                                                                                            data: prevData.data.map((item) => 
+                                                                                                item.id === updatedUser.id ? { ...item, ...updatedUser } : item
+                                                                                            ),
+                                                                                        }));
+                                                                                    }}
+                                                                                />}                                  
                 </div>
             </div>
         </div>

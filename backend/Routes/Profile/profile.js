@@ -35,6 +35,8 @@ function profile(req, res, con) {
             return res.status(500).json({message: "Hiba a lekérdezés során"})
         }
         //console.log("Lekérdezés eredménye:", getDataResults); // Ellenőrzés
+        console.log(getDataResults);
+        
         return res.status(200).json({message: "Az adatok sikeresen megérkeztek", data: getDataResults})
     })
 }
