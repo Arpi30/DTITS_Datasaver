@@ -5,7 +5,7 @@ export const SaveToCSV = ({datas}) => {
         <div className="saveToCSV">
             <CsvDownloader 
                 datas={datas}
-                text="Export CSV"
+                text="Letöltés"
                 filename={`overtime_`+new Date().toLocaleString()}
                 extension=".csv"
                 className="btn btn-success"

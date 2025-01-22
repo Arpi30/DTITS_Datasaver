@@ -5,6 +5,7 @@ import { DataTable } from "./DataTable";
 import { DateFormat } from "./DateFormat";
 import { SearchBar } from "./SearchBar";
 import { SaveToCSV } from "./SaveToCSV";
+import { EditDataTable } from "./EditDataTable";
 
 
 
@@ -15,6 +16,8 @@ export const Profile = ({user}) => {
     const [selectedRows, setSelectedRows] = useState([])
     const [isAllSelected, setIsAllSelected] = useState(false)
     const [timeLeft, setTimeLeft] = useState(60);
+    const [searchItem, setSearchItem] = useState("");
+    const [show, setShow] = useState(false);
 
     const fetchProfileData = async () => {
         const getData = {
@@ -107,10 +110,26 @@ export const Profile = ({user}) => {
         }
     }
 
+    const filterData = (data, searchItem) => {
+        if (!searchItem) return data; // Ha nincs keresési feltétel, térj vissza az eredeti tömbbel
+    
+        return data.filter(item => 
+            Object.values(item).some(value => 
+                String(value).toLowerCase().includes(searchItem.toLowerCase())
+            )
+        );
+    };
+
+    const handleSearch = (event) => {
+        setSearchItem(event.target.value);
+    };
+
     useEffect(() => {
         fetchProfileData();
         
     }, []);
+
+    const filteredData = responseData?.data ? filterData(responseData.data, searchItem) : [];
 
     useEffect(() => {
         if (message) {
@@ -132,6 +151,11 @@ export const Profile = ({user}) => {
 
         return () => clearInterval(timerId);
     }, [timeLeft]);
+
+    
+    
+    console.log(selectedRows );
+    
     
     return (
         <div style={{height: "100vh"}} className="d-flex flex-column mx-5 align-items-center">
@@ -149,7 +173,7 @@ export const Profile = ({user}) => {
                 </Card>
             </div>
             <div className="actionBar d-flex flex-row w-100">
-                <SearchBar />
+                <SearchBar handleSearch={handleSearch} searchItem={searchItem}/>
                 <SaveToCSV datas={responseData && responseData.data}/>
             </div>
             <div className="position-relative w-100">
@@ -159,10 +183,11 @@ export const Profile = ({user}) => {
                 <div className="countdown text-end" style={{fontSize: "12px", color: "#aaaaaa"}}>{timeLeft}</div>
                 <div> {responseData &&
                     <DataTable 
+                        showHandler={() => setShow(true)}
                         user={user} 
                         selectedRows={isRowSelected} 
                         selectedAllRows={selectAllRowsWithChecbox}  
-                        res={responseData} 
+                        res={{ ...responseData, data: filteredData }} 
                         selectedRowsWithCheckbox={selectedRowsWithCheckbox}
                         approveItem={approveItem}
                         deleteItemHandler={() => {
@@ -173,7 +198,7 @@ export const Profile = ({user}) => {
 
                         }}
                     />}
-                                                            
+                    {(selectedRows.length == 1 && show) && <EditDataTable handleClose={() => setShow(false)} show={show} user={selectedRows[0]}/>}                                  
                 </div>
             </div>
         </div>

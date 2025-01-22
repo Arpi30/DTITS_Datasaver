@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { MdDoneAll } from "react-icons/md";
 import { DateFormat } from "./DateFormat";
 
-export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem}) => {
+export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler}) => {
+    
     
     const columns = [
         { label: "Családinév", key: "firstName" },
@@ -57,7 +58,7 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                     res.data.map((row, rowIndex) => {
                         
                         return (
-                            <tr key={rowIndex}  className="border rounded shadow-sm" style={{backgroundColor: getRowStyle(row.statusz), height: "35px"}}>
+                            <tr key={rowIndex}  className="border rounded shadow-sm" style={{backgroundColor: getRowStyle(row.statusz), height: "35px", overflow: "hidden"}}>
                                 <td>
                                     <input type="checkbox" 
                                     onChange={() => selectedRowsWithCheckbox(row)} 
@@ -74,7 +75,7 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                     
                                     return <td key={colIndex}>{cellValue}</td>;
                                 })}
-                                <td>{<MdModeEdit size={15}/>}</td>
+                                <td>{<MdModeEdit onClick={showHandler} size={15}/>}</td>
                                 <td>{<MdDelete onClick={deleteItemHandler} size={15}/>}</td>
                                 <td>{user.role == "admin" && <MdDoneAll onClick={approveItem} size={15}/>}</td>
                             </tr>

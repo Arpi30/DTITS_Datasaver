@@ -36,7 +36,12 @@ button{
 
 td, tr {
   font-size: 12px;
+  text-align: center;
 }
+td{
+  max-width: 100px;
+}
+
 .alertParent{
   position: absolute;
   top: -20px;
