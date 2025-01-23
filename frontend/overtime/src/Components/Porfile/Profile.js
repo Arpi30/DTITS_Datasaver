@@ -63,8 +63,13 @@ export const Profile = ({user}) => {
 
     const deleteHandler = async (arrOfItems) => {
         if(selectedRows.length == 0){
-            alert("No item to delete!")
+            setMessage({message: "Nincs kijelölve sor!"})
             return
+        }
+        const hasApprovedStatus = selectedRows.some((row) => row.statusz === "Approved");
+        if (hasApprovedStatus) {
+            setMessage({ message: "Jóváhagyott sor nem törölhető!" });
+            return;
         }
         try {
             const response = await fetchData(`http://localhost:3001/profile${arrOfItems.length > 1 ? "/bulk" : ""}`, "DELETE", arrOfItems);
@@ -90,14 +95,19 @@ export const Profile = ({user}) => {
             return; 
         }
         try {
-            const response = await fetchData("http://localhost:3001/approve", "POST", selectedRows[0]);
+            const currentStatus = selectedRows[0].statusz
+            const newStatus = currentStatus === "Approved" ? "Pending" : "Approved"
+            const response = await fetchData("http://localhost:3001/approve", "POST", {
+                ...selectedRows[0],
+                statusz: newStatus
+            });
             
             // Az állapot frissítése az ID alapján
             setResponseData((prevData) => ({
                 ...prevData,
                 data: prevData.data.map((item) =>
                     item.id === response.id
-                        ? { ...item, statusz: "Approved" }
+                        ? { ...item, statusz: newStatus }
                         : item
                     
                 ),
@@ -153,7 +163,8 @@ export const Profile = ({user}) => {
 
     
     
-
+    //console.log(selectedRows);
+    
     return (
         <div style={{height: "100vh"}} className="d-flex flex-column mx-5 align-items-center">
             <div className="my-5 w-100 d-flex align-items-start">

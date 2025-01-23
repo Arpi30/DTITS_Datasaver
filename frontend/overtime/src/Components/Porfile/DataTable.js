@@ -3,6 +3,7 @@ import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { MdDoneAll } from "react-icons/md";
 import { DateFormat } from "./DateFormat";
+import { IoMdRefresh } from "react-icons/io";
 
 export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler}) => {
     
@@ -75,9 +76,9 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                     
                                     return <td key={colIndex}>{cellValue}</td>;
                                 })}
-                                <td>{<MdModeEdit onClick={showHandler} size={15}/>}</td>
-                                <td>{<MdDelete onClick={deleteItemHandler} size={15}/>}</td>
-                                <td>{user.role == "admin" && <MdDoneAll onClick={approveItem} size={15}/>}</td>
+                                <td>{row.statusz == "Pending" && <MdModeEdit onClick={showHandler} size={15}/>}</td>
+                                <td>{row.statusz == "Pending" && <MdDelete onClick={deleteItemHandler} size={15}/>}</td>
+                                <td>{user.role == "admin" && (row.statusz === "Pending" ? <MdDoneAll onClick={approveItem} size={15}/> : <IoMdRefresh onClick={approveItem} size={15}/>)}</td>
                             </tr>
                         )
                     })
