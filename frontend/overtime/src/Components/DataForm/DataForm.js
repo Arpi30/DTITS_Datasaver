@@ -1,11 +1,10 @@
 import React from "react";
-import DatePicker, { registerLocale, setDefaultLocale } from "react-datepicker";
-import { hu } from 'date-fns/locale/hu';
+import DatePicker from "react-datepicker";
+
 import "react-datepicker/dist/react-datepicker.css";
 import {Form, Button} from 'react-bootstrap';
 
 export const DataForm = ({formData, handleChange, handleSubmit, handleDateChange}) => {
-    registerLocale('hu', hu)
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -27,7 +26,7 @@ export const DataForm = ({formData, handleChange, handleSubmit, handleDateChange
                     <option>Június</option>
                     <option>Július</option>
                     <option>Augusztus</option>
-                    <option>Szeotember</option>
+                    <option>Szeptember</option>
                     <option>Október</option>
                     <option>November</option>
                     <option>December</option>
@@ -43,11 +42,11 @@ export const DataForm = ({formData, handleChange, handleSubmit, handleDateChange
             </Form.Group>
             <Form.Group className="mb-3 d-flex flex-column" controlId="formGroupTimeStart">
                 <Form.Label>Készenlét/Túlóra/Csúszó kezdete</Form.Label>
-                <DatePicker locale="hu" dateFormat="yyyy/MM/dd HH:mm" timeFormat="HH:mm" showTimeSelect selected={formData.start} onChange={(date) => handleDateChange(date, "start")} value={formData.start} name="start"/>
+                <DatePicker dateFormat="yyyy/MM/dd HH:mm" timeFormat="HH:mm" showTimeSelect selected={formData.start} onChange={(date) => handleDateChange(date, "start")} value={formData.start} name="start"/>
             </Form.Group>
             <Form.Group className="mb-3 d-flex flex-column" controlId="formGroupTimeEnd">
                 <Form.Label>Készenlét/Túlóra/Csúszó vége</Form.Label>
-                <DatePicker locale="hu" dateFormat="yyyy/MM/dd HH:mm" timeFormat="HH:mm" showTimeSelect selected={formData.end} onChange={(date) => handleDateChange(date, "end")} value={formData.end} name="end"/>
+                <DatePicker dateFormat="yyyy/MM/dd HH:mm" timeFormat="HH:mm" showTimeSelect selected={formData.end} onChange={(date) => handleDateChange(date, "end")} value={formData.end} name="end"/>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formGroupReason">
                 <Form.Label>Indok</Form.Label>

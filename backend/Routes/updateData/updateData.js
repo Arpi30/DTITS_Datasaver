@@ -1,3 +1,4 @@
+
 function updateData(req, res, con) {
     const {id, firstName, lastName, emea, group, month, type, start, end, reason, comment} = req.body
 

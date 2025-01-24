@@ -6,6 +6,7 @@ import { DateFormat } from "./DateFormat";
 import { SearchBar } from "./SearchBar";
 import { SaveToCSV } from "./SaveToCSV";
 import { EditDataTable } from "./EditDataTable";
+import { ChartData } from "../ChartData/ChartData";
 
 
 
@@ -160,10 +161,6 @@ export const Profile = ({user}) => {
 
         return () => clearInterval(timerId);
     }, [timeLeft]);
-
-    
-    
-    //console.log(selectedRows);
     
     return (
         <div style={{height: "100vh"}} className="d-flex flex-column mx-5 align-items-center">
@@ -179,6 +176,7 @@ export const Profile = ({user}) => {
                         </ListGroup>
                     </Card.Body>
                 </Card>
+                <ChartData res={responseData} />
             </div>
             <div className="actionBar d-flex flex-row w-100">
                 <SearchBar handleSearch={handleSearch} searchItem={searchItem}/>

@@ -27,12 +27,14 @@ export const AddOvertime = ({user}) => {
 
     const handleDateChange = (date, name) => {
         // Hozzáadunk 1 órát a dátumhoz
-        const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+        //const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+        const adjustedDate = new Date(date.getTime());
         setFormData(prevState => ({
             ...prevState,
             [name]: adjustedDate
         }));
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
