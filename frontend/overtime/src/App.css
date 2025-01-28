@@ -1,5 +1,6 @@
 *{
-  font-family: sans-serif !important;
+  font-family: 'TeleNeoWeb', sans-serif !important;
+  box-sizing: border-box;
 }
 .App {
   text-align: center;
@@ -26,10 +27,21 @@ button{
 }
 .navbarLink{
   transition: 200ms ease-in-out 0s;
+  text-decoration: none;
+  color: #383838;
+  font-weight: 400;
+  font-size: 16px;
+  visibility: inherit;
+  padding: 5px;
+  list-style: none;
 }
 
 .navbarLink:hover{
-  color: #fc97cb!important;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+.list-group-item{
+  color: #7a7a7a !important;
 }
 
 /*Táblázat*/
@@ -54,4 +66,7 @@ td{
   border-radius: 5px;
   border: 1px solid #fc99cc;
   color: #c40266;
+}
+.incraseAndDecreaseButton{
+  background: transparent !important;
 }

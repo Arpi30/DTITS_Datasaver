@@ -17,6 +17,8 @@ const profile = require('./Routes/Profile/profile');
 const delOvertime = require('./Routes/Overtime/delOvertime')
 const approvedItem = require('./Routes/Overtime/approve')
 const updateData = require('./Routes/updateData/updateData')
+const admin = require('./Routes/admin/admin')
+const useOvertime = require('./Routes/updateData/useOvertime')
 // Regex validation 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const emeaRegex = /^\d{9}$/;
@@ -89,6 +91,16 @@ app.post('/approve', (req, res) => {
 // adat módosítás
 app.post('/updateData', (req, res) => {
     updateData.updateData(req, res, con)
+})
+
+// Admin
+app.post('/admin', (req, res) => {
+    admin.admin(req,res,con)
+})
+
+// Overtime
+app.post('/useOvertime', (req, res) => {
+    useOvertime.useOvertime(req, res, con)
 })
 
 // Minden egyéb útvonal kiszolgálása (React routing támogatás)

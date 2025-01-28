@@ -3,7 +3,7 @@ function login (req, res, con, bcrypt, jwt, SECRET_KEY) {
 
     // Felhasználó keresése adatbázisban
     const userFind = `
-        SELECT id, first_name, last_name, emea_number, email, password_hash, user_role, user_created_time, login, incorrect_password_attempts, last_login
+        SELECT id, first_name, last_name, emea_number, email, password_hash, user_role, user_created_time, login, incorrect_password_attempts, last_login, csoport
         FROM user 
         WHERE emea_number = ? AND email = ?
     `;
@@ -93,7 +93,8 @@ function login (req, res, con, bcrypt, jwt, SECRET_KEY) {
                         email: updatedUser.email,
                         role: updatedUser.user_role,
                         createdTime: updatedUser.user_created_time,
-                        lastLogin: updatedUser.last_login
+                        lastLogin: updatedUser.last_login,
+                        csoport: updatedUser.csoport
                     },
                 });
             });

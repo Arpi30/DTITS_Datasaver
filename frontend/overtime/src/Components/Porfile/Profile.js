@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Card, ListGroup, Alert, Spinner } from 'react-bootstrap';
+import {Card, ListGroup, Alert, Button } from 'react-bootstrap';
 import { useAxiosFetch } from "../../Function/Fetch/Fetch";
 import { DataTable } from "./DataTable";
 import { DateFormat } from "./DateFormat";
@@ -12,13 +12,14 @@ import { ChartData } from "../ChartData/ChartData";
 
 export const Profile = ({user}) => {
     const { fetchData, error } = useAxiosFetch();
-    const [responseData, setResponseData] = useState(null);
+    const [responseData, setResponseData] = useState();
     const [message, setMessage] = useState(null)
     const [selectedRows, setSelectedRows] = useState([])
     const [isAllSelected, setIsAllSelected] = useState(false)
     const [timeLeft, setTimeLeft] = useState(60);
     const [searchItem, setSearchItem] = useState("");
     const [show, setShow] = useState(false);
+    const [overtimeButton, setOvertimeButton] = useState(false)
 
     const fetchProfileData = async () => {
         const getData = {
@@ -29,7 +30,13 @@ export const Profile = ({user}) => {
         
         try {
             const response = await fetchData("http://localhost:3001/profile", "POST", getData);
-            setResponseData(response);
+            // Az adatok bővítése az eredeti idotartam mentésével
+            const initialData = response.data.map((row) => ({
+                ...row,
+                originalIdotartam: row.idotartam, // Az eredeti idotartam mentése
+            }));
+            
+            setResponseData({ ...response, data: initialData });
         } catch (err) {
         }
     };
@@ -50,7 +57,7 @@ export const Profile = ({user}) => {
         setSelectedRows((prevSelectedRows) => {
             if (prevSelectedRows.some((row) => row.id === rowData.id)) {
                 // Ha már kijelöltük, eltávolítjuk
-                return prevSelectedRows.filter((index) => index !== rowData);
+                return prevSelectedRows.filter((row) => row.id !== rowData.id);
             } else {
                 // Egyébként hozzáadjuk
                 return [...prevSelectedRows, rowData];
@@ -89,6 +96,7 @@ export const Profile = ({user}) => {
             
         }
     }
+    
 
     const approveItem = async () => {
         if (selectedRows.length === 0) {
@@ -120,6 +128,34 @@ export const Profile = ({user}) => {
         }
     }
 
+    const useOvertimeHours = async () => {
+        const overtime = selectedRows[0].tulora
+        try {
+            const response = await fetchData("http://localhost:3001/useOvertime", "POST", {
+                ...selectedRows[0],
+                tulora: overtime
+            })
+            // Az állapot frissítése az ID alapján
+            setResponseData((prevData) => ({
+                ...prevData,
+                data: prevData.data.map((item) =>
+                    item.id === response.id
+                        ? { ...item, tulora: overtime, originalIdotartam: overtime,}
+                        : item
+                    
+                ),
+            }));
+            console.log(responseData.data);
+            
+            setMessage(response);
+            setSelectedRows([]);
+            setOvertimeButton(false)
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     const filterData = (data, searchItem) => {
         if (!searchItem) return data; // Ha nincs keresési feltétel, térj vissza az eredeti tömbbel
     
@@ -138,6 +174,53 @@ export const Profile = ({user}) => {
         fetchProfileData();
         
     }, []);
+
+    const handleDecrease = (rowIndex) => {
+        
+        setResponseData((prevData) => {
+            const newData = prevData.data.map((row, index) => {
+                if (index === rowIndex) {
+                    const updatedRow = {
+                        ...row,
+                        felh_tulora: row.felh_tulora - 1,
+                        idotartam: row.idotartam - 1,
+                        tulora: row.tulora - 1,
+                    };
+                    if (updatedRow.felh_tulora < row.felh_tulora) {
+                        setOvertimeButton(true);
+                    }
+                    
+                    return updatedRow;
+                    
+                }
+                return row;
+            });
+            
+            return { ...prevData, data: newData };
+        });
+    };
+
+    const handleIncrease = (rowIndex) => {
+        setResponseData((prevData) => {
+            const newData = prevData.data.map((row, index) => {
+                if (index === rowIndex) {
+                    const updatedRow = {
+                        ...row,
+                        felh_tulora: row.felh_tulora + 1,
+                        idotartam: row.idotartam + 1,
+                        tulora: row.tulora + 1
+                    }
+                    if (updatedRow.felh_tulora > row.felh_tulora) {
+                        setOvertimeButton(true);
+                    }
+                    
+                    return updatedRow;
+                }
+                return row;
+            });
+            return { ...prevData, data: newData };
+        });
+    };
 
     const filteredData = responseData?.data ? filterData(responseData.data, searchItem) : [];
 
@@ -161,18 +244,22 @@ export const Profile = ({user}) => {
 
         return () => clearInterval(timerId);
     }, [timeLeft]);
+
+    //console.log(responseData?.data);
+    
     
     return (
         <div style={{height: "100vh"}} className="d-flex flex-column mx-5 align-items-center">
             <div className="my-5 w-100 d-flex align-items-start">
                 <Card style={{ width: '20rem' }}>
                     <Card.Body>
-                        <Card.Title><h3>{user.firstName} {user.lastName}</h3></Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted"><span style={{fontSize: "12px"}}>Utolsó bejelentkezés: {DateFormat(new Date(user.lastLogin))}</span></Card.Subtitle>
+                        <Card.Title><h3>{user.lastName} {user.firstName}</h3></Card.Title>
+                        <Card.Subtitle className="mb-2 text-muted"><span style={{fontSize: "12px"}}><span className="fw-bold">Utolsó bejelentkezés:</span> {DateFormat(new Date(user.lastLogin))}</span></Card.Subtitle>
                         <ListGroup variant="flush">
-                            <ListGroup.Item>Emea: {user.emea}</ListGroup.Item>
-                            <ListGroup.Item>Email: {user.email}</ListGroup.Item>
-                            <ListGroup.Item>jogosultság: {user.role}</ListGroup.Item>
+                            <ListGroup.Item><h6><span className="fw-bold">Emea:</span> {user.emea}</h6></ListGroup.Item>
+                            <ListGroup.Item><h6><span className="fw-bold">Email:</span> <span style={{color: "#e20074"}}>{user.email}</span></h6></ListGroup.Item>
+                            <ListGroup.Item><h6><span className="fw-bold">Csoport:</span> {user.csoport}</h6></ListGroup.Item>
+                            <ListGroup.Item><h6><span className="fw-bold">Jog:</span> {user.role}</h6></ListGroup.Item>
                         </ListGroup>
                     </Card.Body>
                 </Card>
@@ -181,6 +268,7 @@ export const Profile = ({user}) => {
             <div className="actionBar d-flex flex-row w-100">
                 <SearchBar handleSearch={handleSearch} searchItem={searchItem}/>
                 <SaveToCSV datas={responseData && responseData.data}/>
+                {(selectedRows.length == 1 && overtimeButton) && <Button className="ms-2" onClick={useOvertimeHours}>Mentés</Button>}
             </div>
             <div className="position-relative w-100">
                 <div className="alertParent">
@@ -189,6 +277,8 @@ export const Profile = ({user}) => {
                 <div className="countdown text-end" style={{fontSize: "12px", color: "#aaaaaa"}}>{timeLeft}</div>
                 <div> {responseData &&
                     <DataTable 
+                        handleDecrease={handleDecrease}
+                        handleIncrease={handleIncrease}
                         showHandler={() => setShow(true)}
                         user={user} 
                         selectedRows={isRowSelected} 

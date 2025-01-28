@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { useAxiosFetch } from "../../Function/Fetch/Fetch";
 import "react-datepicker/dist/react-datepicker.css";
 import { DataForm } from "../DataForm/DataForm";
+import { format } from 'date-fns';
 
 
 export const AddOvertime = ({user}) => {
@@ -11,7 +12,7 @@ export const AddOvertime = ({user}) => {
         firstName: user.firstName,
         lastName: user.lastName,
         emea: user.emea,
-        group: "",
+        group: user.csoport,
         month: "",
         type: "",
         start: new Date(),
@@ -28,17 +29,24 @@ export const AddOvertime = ({user}) => {
     const handleDateChange = (date, name) => {
         // Hozzáadunk 1 órát a dátumhoz
         //const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+        console.log('Date object received:', date);
         const adjustedDate = new Date(date.getTime());
+        console.log(adjustedDate);
+
+        const formattedDate = format(adjustedDate, 'yyyy-MM-dd HH:mm');
+        
         setFormData(prevState => ({
             ...prevState,
-            [name]: adjustedDate
+            [name]: formattedDate 
         }));
     };
     
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetchData("http://localhost:3001/overtime", "POST", formData)        
+        const response = await fetchData("http://localhost:3001/overtime", "POST", formData) 
+        console.log(formData);
+               
     };
 
 

@@ -14,6 +14,7 @@ export const ChartData = ({res}) => {
             const honap = item.honap;
             const tipus = item.tipus;
             const idotartam = item.idotartam;
+            //const tulora = item.tulora;
     
             if (!groupedData[honap]) {
                 groupedData[honap] = { honap: honap, keszenlet: 0, tulora: 0 };
