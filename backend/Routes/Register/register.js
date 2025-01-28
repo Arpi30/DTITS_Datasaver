@@ -1,5 +1,5 @@
 function register (req, res, con, bcrypt, emailRegex, emeaRegex, passwordRegex) {
-    const { firstname, lastname, emea, email, password, userRole } = req.body;
+    const { firstname, lastname, emea, email, password, userRole, userGroup } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
     // Hibák tárolása
     let errors = {};
@@ -34,8 +34,8 @@ function register (req, res, con, bcrypt, emailRegex, emeaRegex, passwordRegex) 
         }
 
         // Ha nincs ütközés, folytatódhat a regisztráció
-        const insertSql = "INSERT INTO user (first_name, last_name, emea_number, email, password_hash, user_role) VALUES (?, ?, ?, ?, ?, ?);";
-        con.query(insertSql, [firstname, lastname, emea, email, hashedPassword, userRole], (insertErr, result) => {
+        const insertSql = "INSERT INTO user (first_name, last_name, emea_number, email, password_hash, user_role, csoport) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        con.query(insertSql, [firstname, lastname, emea, email, hashedPassword, userRole, userGroup], (insertErr, result) => {
             if (insertErr) {
                 console.error("Hiba történt a beszúrás során:", insertErr);
                 return res.status(500).json({ error: "Hiba történt az adatbázis művelet során." });

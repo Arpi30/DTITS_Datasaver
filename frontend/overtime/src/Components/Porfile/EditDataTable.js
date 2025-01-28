@@ -2,24 +2,22 @@ import React, {useState} from "react";
 import { DataForm } from "../DataForm/DataForm";
 import { useAxiosFetch } from "../../Function/Fetch/Fetch";
 import {Modal, Button} from 'react-bootstrap';
+import { format } from 'date-fns';
 
 export const EditDataTable = ({user, show, handleClose, onUpdate}) => {
 
+    console.log(user);
     
     const { fetchData } = useAxiosFetch();
     const [formData, setFormData] = useState({
         id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
         emea: user.emea_number,
-        group: user.csoport,
         month: user.honap,
         type: user.tipus,
         start: new Date(user.kezdete),
         end: new Date(user.vege),
         reason: user.indok,
-        comment: user.megjegyzes,
-        statusz: user.statusz
+        comment: user.megjegyzes
       });
       //console.log(formData);
       
@@ -29,25 +27,19 @@ export const EditDataTable = ({user, show, handleClose, onUpdate}) => {
     };
 
     const handleDateChange = (date, name) => {
-        // Hozzáadunk 1 órát a dátumhoz
-        const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+        const adjustedDate = new Date(date.getTime());
+        const formattedDate = format(adjustedDate, 'yyyy-MM-dd HH:mm');
         setFormData(prevState => ({
             ...prevState,
-            [name]: adjustedDate
+            [name]: formattedDate
         }));
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         try {
-            const response = await fetchData("http://localhost:3001/updateData", "POST", formData)    
-              
-            if (onUpdate) {
-                //onUpdate(formData);
-                window.location.reload()        //ideiglenes megoldás. A probléma az hogy a selectedRows[0] és a Profile responseData strukturája nem eggyezik meg.
-            }                                   //Az onUpdate proppal próbálom frissítani a responseData statet az EditDataTable formData state-jével de eltél a struktúra..
-            handleClose()                       // Utána kell nézni hogy hol változik meg a 2 state struktúrája vagy a backend oldalról visszaküldöm az adott sort 
-                                                // és azzal írom felül a responseData state-et.
+            const response = await fetchData("http://localhost:3001/updateData", "POST", formData)                              
+            handleClose()                     
         } catch (error) {
             console.log(error);
         }

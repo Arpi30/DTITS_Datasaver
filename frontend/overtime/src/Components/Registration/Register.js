@@ -11,7 +11,8 @@ export const Register = () => {
     emea: "",
     email: "",
     password: "",
-    userRole: "",
+    userRole: "user",
+    userGroup: ""
   });
 
   const handleChange = (e) => {
@@ -36,6 +37,18 @@ export const Register = () => {
         <Container className="mt-5 w-25">
         <h2>Regisztráció</h2>
         <Form onSubmit={handleSubmit}>
+            {/* Last Name */}
+            <Form.Group className="mb-3" controlId="lastname">
+            <Form.Label>Vezetéknév</Form.Label>
+            <Form.Control
+                type="text"
+                name="lastname"
+                placeholder="Adja meg a vezetéknevét"
+                value={formData.lastname}
+                onChange={handleChange}
+                required
+            />
+            </Form.Group>
             {/* First Name */}
             <Form.Group className="mb-3" controlId="firstname">
             <Form.Label>Keresztnév</Form.Label>
@@ -49,18 +62,6 @@ export const Register = () => {
             />
             </Form.Group>
 
-            {/* Last Name */}
-            <Form.Group className="mb-3" controlId="lastname">
-            <Form.Label>Vezetéknév</Form.Label>
-            <Form.Control
-                type="text"
-                name="lastname"
-                placeholder="Adja meg a vezetéknevét"
-                value={formData.lastname}
-                onChange={handleChange}
-                required
-            />
-            </Form.Group>
 
             {/* EMEA ID */}
             <Form.Group className="mb-3" controlId="emea">
@@ -119,7 +120,7 @@ export const Register = () => {
             </Form.Group>
 
             {/* User Role */}
-            <Form.Group className="mb-3" controlId="userRole">
+            {/* <Form.Group className="mb-3" controlId="userRole">
             <Form.Label>Felhasználói jogosultság</Form.Label>
             <Form.Select
                 name="userRole"
@@ -130,6 +131,20 @@ export const Register = () => {
                 <option value="">Válassza ki a jogosultsági szintet</option>
                 <option value="admin">Admin</option>
                 <option value="user">Felhasználó</option>
+            </Form.Select>
+            </Form.Group> */}
+            {/* User Role */}
+            <Form.Group className="mb-3" controlId="userGroup">
+            <Form.Label>Csoport</Form.Label>
+            <Form.Select
+                name="userGroup"
+                value={formData.userGroup}
+                onChange={handleChange}
+                required
+            >
+                <option value="">Válasszd ki a csoportodat</option>
+                <option value="App1">App1</option>
+                <option value="App2">App2</option>
             </Form.Select>
             </Form.Group>
 

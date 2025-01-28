@@ -4,13 +4,15 @@ import { MdDelete } from "react-icons/md";
 import { MdDoneAll } from "react-icons/md";
 import { DateFormat } from "./DateFormat";
 import { IoMdRefresh } from "react-icons/io";
+import { CiCircleMinus } from "react-icons/ci";
+import { CiCirclePlus } from "react-icons/ci";
 
-export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler}) => {
+export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler, handleDecrease, handleIncrease }) => {
     
     
     const columns = [
-        { label: "Családinév", key: "firstName" },
         { label: "Vezetéknév", key: "lastName" },
+        { label: "Családinév", key: "firstName" },
         { label: "Emea", key: "emea_number" },
         { label: "Csoport", key: "csoport" },
         { label: "Hónap", key: "honap" },
@@ -18,9 +20,10 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
         { label: "Kezdete", key: "kezdete", isDate: true },
         { label: "Vége", key: "vege", isDate: true },
         { label: "Indok", key: "indok" },
+        { label: "Túlóra", key: "idotartam" },
+        { label: "Csúszó keret", key: "felh_tulora" },
+        { label: "Negatív idő", key: "tulora" },
         { label: "Megjegyzés", key: "megjegyzes" },
-        { label: "Időtartam", key: "idotartam" },
-        { label: "Negatív idő", key: "negativ_ido" },
         //{ label: "Jóváhagyás", key: "jovahagyas" },
         { label: "Státusz", key: "statusz" },
         { label: "Létrehozva", key: "created_at", isDate: true },
@@ -74,7 +77,31 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                                       cellValue = DateFormat(new Date(cellValue));
                                     }
                     
-                                    return <td key={colIndex}>{cellValue}</td>;
+                                    return (
+                                        <td key={colIndex}>
+                                            {col.key === "felh_tulora" && row.tipus == "Túlóra" ? (
+                                                <>
+                                                    <button className="incraseAndDecreaseButton"
+                                                        onClick={() => handleDecrease(rowIndex)}
+                                                        disabled={row.felh_tulora === 0 || row.statusz == "Approved"}
+                                                        
+                                                    >
+                                                        <CiCircleMinus size={20} />
+                                                    </button>
+                                                    {cellValue}
+                                                    <button className="incraseAndDecreaseButton"
+                                                        onClick={() => handleIncrease(rowIndex)}
+                                                        disabled={row.tulora === 0 || row.statusz == "Approved"}
+                                                        
+                                                    >
+                                                        <CiCirclePlus size={20} />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                cellValue
+                                            )}
+                                        </td>
+                                    );
                                 })}
                                 <td>{row.statusz == "Pending" && <MdModeEdit onClick={showHandler} size={15}/>}</td>
                                 <td>{row.statusz == "Pending" && <MdDelete onClick={deleteItemHandler} size={15}/>}</td>

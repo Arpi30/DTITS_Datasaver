@@ -10,8 +10,8 @@ export const Nav = ({ setUser, isUser }) => {
       <Image src="https://yam-united.telekom.com/web/themes/public/files/a5184677-e3ae-4889-be48-37dbf84041eb?extension=png" className="welcomsiteNavbarImage" />
       {isUser == null ? (
         <>
-          <Link className="mx-2 fs-5 text-decoration-none text-light navbarLink" to="/login">Bejelentkezés</Link>
-          <Link className="mx-2 fs-5 text-decoration-none text-light navbarLink" to="/register">Regisztráció</Link>
+          <Link className="mx-2 fs-5 text-decoration-none text-light" to="/login">Bejelentkezés</Link>
+          <Link className="mx-2 fs-5 text-decoration-none text-light" to="/register">Regisztráció</Link>
         </>
       ) : (
         <div className="w-100 d-flex justify-content-end">

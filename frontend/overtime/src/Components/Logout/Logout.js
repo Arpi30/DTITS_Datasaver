@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; 
 import { useAxiosFetch } from "../../Function/Fetch/Fetch";
 import { Link } from "react-router-dom";
+import { MdLogout } from "react-icons/md";
 
 export const Logout = ({ setUser }) => {
     const { fetchData, error } = useAxiosFetch();
@@ -28,8 +29,8 @@ export const Logout = ({ setUser }) => {
     };
 
     return (
-        <Link onClick={handleLogout} className="logout-button">
-            Kijelentkezés
+        <Link onClick={handleLogout} className="logout-button navbarLink">
+            <MdLogout size={20}/> Kijelentkezés
         </Link>
     );
 };

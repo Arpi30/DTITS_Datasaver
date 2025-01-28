@@ -7,6 +7,7 @@ import {Register} from "./Components/Registration/Register"
 import {Home} from "./Components/Home/Home"
 import {Profile} from "./Components/Porfile/Profile"
 import { ResetPassword } from "./Components/ResetPassword/ResetPassword";
+import { Admin } from "./Components/Admin/Admin";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -26,6 +27,8 @@ export default function App() {
         <Route path="/login" element={<Login setUserData={setUser}/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
+        {(user && user.role === "admin") && <Route path="/admin" element={<Admin />} />}
+        
       </Routes>
     </Router>
   );
