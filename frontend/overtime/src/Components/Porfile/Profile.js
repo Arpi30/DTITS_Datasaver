@@ -295,23 +295,24 @@ export const Profile = ({user}) => {
 
                         }}
                     />}
-                    {(selectedRows.length == 1 && show && selectedRows[0]) && <EditDataTable 
-                                                                                    handleClose={() => setShow(false)} 
-                                                                                    show={show} 
-                                                                                    user={selectedRows[0]}
-                                                                                    onUpdate={(updatedUser) => {
-                                                                                        console.log(updatedUser);
-                                                                                        
-                                                                                        setResponseData((prevData) => ({ 
-                                                                                            ...prevData,
-                                                                                            data: prevData.data.map((item) => 
-                                                                                                item.id === updatedUser.data.id ? { ...item, ...updatedUser.data } : item
-                                                                                            ),
-                                                                                        }));
-                                                                                        setMessage(updatedUser)
-                                                                                        setSelectedRows([])
-                                                                                    }}
-                                                                                />}                                  
+                    {(selectedRows.length == 1 && show && selectedRows[0]) && 
+                        <EditDataTable 
+                            handleClose={() => setShow(false)} 
+                            show={show} 
+                            user={selectedRows[0]}
+                            onUpdate={(updatedUser) => {
+                                console.log(updatedUser);
+                                
+                                setResponseData((prevData) => ({ 
+                                    ...prevData,
+                                    data: prevData.data.map((item) => 
+                                        item.id === updatedUser.data.id ? { ...item, ...updatedUser.data } : item
+                                    ),
+                                }));
+                                setMessage(updatedUser)
+                                setSelectedRows([])
+                            }}
+                        />}                                  
                 </div>
             </div>
         </div>
