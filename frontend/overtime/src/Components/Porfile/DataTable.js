@@ -7,7 +7,7 @@ import { IoMdRefresh } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 
-export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler, handleDecrease, handleIncrease }) => {
+export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler, handleDecrease, handleIncrease, isSelectedRows }) => {
     
     
     const columns = [
@@ -20,15 +20,15 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
         { label: "Kezdete", key: "kezdete", isDate: true },
         { label: "Vége", key: "vege", isDate: true },
         { label: "Indok", key: "indok" },
-        { label: "Túlóra", key: "idotartam" },
-        { label: "Csúszó keret", key: "felh_tulora" },
-        { label: "Negatív idő", key: "tulora" },
+        { label: "Időtartam", key: "idotartam" },
+        { label: "Csúszó keret", key: "csuszokeret" },
+        { label: "Negatív idő", key: "negativ_ido" },
         { label: "Megjegyzés", key: "megjegyzes" },
         //{ label: "Jóváhagyás", key: "jovahagyas" },
         { label: "Státusz", key: "statusz" },
         { label: "Létrehozva", key: "created_at", isDate: true },
         { label: "Frissítve", key: "updated_at", isDate: true },
-        { label: <MdDelete onClick={deleteItemsHandler} size={15}/>, key: "delete" },
+        { label: <button disabled={isSelectedRows.length < 2} className="actionButton"><MdDelete onClick={deleteItemsHandler} size={15}/></button>, key: "delete" },
     ];
     
     
@@ -44,6 +44,10 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                 return {};
         }
     };
+
+    const enabledActionButton = (row) => {
+        return !isSelectedRows.some(selected => selected.id === row.id)
+    }
     
     return (
         <table className="w-100" style={{ borderSpacing: "0 10px", borderCollapse: "separate", cursor: "pointer" }}>
@@ -79,11 +83,11 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                     
                                     return (
                                         <td key={colIndex}>
-                                            {col.key === "felh_tulora" && row.tipus == "Túlóra" ? (
+                                            {col.key === "csuszokeret" && row.tipus == "Túlóra" ? (
                                                 <>
                                                     <button className="incraseAndDecreaseButton"
                                                         onClick={() => handleDecrease(rowIndex)}
-                                                        disabled={row.felh_tulora === 0 || row.statusz == "Approved"}
+                                                        disabled={row.csuszokeret === 0 || row.statusz == "Approved"}
                                                         
                                                     >
                                                         <CiCircleMinus size={20} />
@@ -91,7 +95,7 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                                                     {cellValue}
                                                     <button className="incraseAndDecreaseButton"
                                                         onClick={() => handleIncrease(rowIndex)}
-                                                        disabled={row.tulora === 0 || row.statusz == "Approved"}
+                                                        disabled={row.negativ_ido === 0 || row.statusz == "Approved"}
                                                         
                                                     >
                                                         <CiCirclePlus size={20} />
@@ -103,9 +107,9 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                                         </td>
                                     );
                                 })}
-                                <td>{row.statusz == "Pending" && <MdModeEdit onClick={showHandler} size={15}/>}</td>
-                                <td>{row.statusz == "Pending" && <MdDelete onClick={deleteItemHandler} size={15}/>}</td>
-                                <td>{user.role == "admin" && (row.statusz === "Pending" ? <MdDoneAll onClick={approveItem} size={15}/> : <IoMdRefresh onClick={approveItem} size={15}/>)}</td>
+                                <td>{row.statusz == "Pending" && <button disabled={enabledActionButton(row)} className="actionButton"><MdModeEdit  onClick={showHandler} size={15}/></button>}</td>
+                                <td>{row.statusz == "Pending" && <button disabled={enabledActionButton(row)} className="actionButton"><MdDelete onClick={deleteItemHandler} size={15}/></button>}</td>
+                                <td>{user.role == "admin" && (row.statusz === "Pending" ? <button disabled={enabledActionButton(row)} className="actionButton"><MdDoneAll onClick={approveItem} size={15}/></button> : <button className="actionButton"><IoMdRefresh onClick={approveItem} size={15}/></button>)}</td>
                             </tr>
                         )
                     })

@@ -6,12 +6,15 @@ import { format } from 'date-fns';
 
 export const EditDataTable = ({user, show, handleClose, onUpdate}) => {
 
-    console.log(user);
+    //console.log(user);
     
     const { fetchData } = useAxiosFetch();
     const [formData, setFormData] = useState({
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         emea: user.emea_number,
+        group: user.csoport,
         month: user.honap,
         type: user.tipus,
         start: new Date(user.kezdete),
@@ -36,9 +39,10 @@ export const EditDataTable = ({user, show, handleClose, onUpdate}) => {
     };
 
     const handleSubmit = async (e) => {
-        //e.preventDefault();
+        e.preventDefault();
         try {
-            const response = await fetchData("http://localhost:3001/updateData", "POST", formData)                              
+            const response = await fetchData("http://localhost:3001/updateData", "POST", formData)   
+            onUpdate(response);                           
             handleClose()                     
         } catch (error) {
             console.log(error);

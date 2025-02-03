@@ -129,18 +129,18 @@ export const Profile = ({user}) => {
     }
 
     const useOvertimeHours = async () => {
-        const overtime = selectedRows[0].tulora
+        const overtime = selectedRows[0].negativ_ido
         try {
             const response = await fetchData("http://localhost:3001/useOvertime", "POST", {
                 ...selectedRows[0],
-                tulora: overtime
+                negativ_ido: overtime
             })
             // Az állapot frissítése az ID alapján
             setResponseData((prevData) => ({
                 ...prevData,
                 data: prevData.data.map((item) =>
                     item.id === response.id
-                        ? { ...item, tulora: overtime, originalIdotartam: overtime,}
+                        ? { ...item, negativ_ido: overtime, originalIdotartam: overtime,}
                         : item
                     
                 ),
@@ -182,11 +182,11 @@ export const Profile = ({user}) => {
                 if (index === rowIndex) {
                     const updatedRow = {
                         ...row,
-                        felh_tulora: row.felh_tulora - 1,
+                        csuszokeret: row.csuszokeret - 1,
                         idotartam: row.idotartam - 1,
-                        tulora: row.tulora - 1,
+                        negativ_ido: row.negativ_ido - 1,
                     };
-                    if (updatedRow.felh_tulora < row.felh_tulora) {
+                    if (updatedRow.csuszokeret < row.csuszokeret) {
                         setOvertimeButton(true);
                     }
                     
@@ -206,11 +206,11 @@ export const Profile = ({user}) => {
                 if (index === rowIndex) {
                     const updatedRow = {
                         ...row,
-                        felh_tulora: row.felh_tulora + 1,
+                        csuszokeret: row.csuszokeret + 1,
                         idotartam: row.idotartam + 1,
-                        tulora: row.tulora + 1
+                        negativ_ido: row.negativ_ido + 1
                     }
-                    if (updatedRow.felh_tulora > row.felh_tulora) {
+                    if (updatedRow.csuszokeret > row.csuszokeret) {
                         setOvertimeButton(true);
                     }
                     
@@ -231,7 +231,7 @@ export const Profile = ({user}) => {
         }
     }, [message]);
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (timeLeft === 0) {
         fetchProfileData(); 
         setTimeLeft(60)
@@ -243,7 +243,7 @@ export const Profile = ({user}) => {
         }, 1000);
 
         return () => clearInterval(timerId);
-    }, [timeLeft]);
+    }, [timeLeft]); */
 
     //console.log(responseData?.data);
     
@@ -286,6 +286,7 @@ export const Profile = ({user}) => {
                         res={{ ...responseData, data: filteredData }} 
                         selectedRowsWithCheckbox={selectedRowsWithCheckbox}
                         approveItem={approveItem}
+                        isSelectedRows={selectedRows}
                         deleteItemHandler={() => {
                             selectedRows.length > 1 ? setMessage({message: "Egyszerre csak egy sort lehet törölni!"}) : deleteHandler(selectedRows[0])
                         }}
@@ -304,9 +305,11 @@ export const Profile = ({user}) => {
                                                                                         setResponseData((prevData) => ({ 
                                                                                             ...prevData,
                                                                                             data: prevData.data.map((item) => 
-                                                                                                item.id === updatedUser.id ? { ...item, ...updatedUser } : item
+                                                                                                item.id === updatedUser.data.id ? { ...item, ...updatedUser.data } : item
                                                                                             ),
                                                                                         }));
+                                                                                        setMessage(updatedUser)
+                                                                                        setSelectedRows([])
                                                                                     }}
                                                                                 />}                                  
                 </div>

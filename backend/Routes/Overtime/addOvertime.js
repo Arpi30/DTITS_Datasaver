@@ -17,7 +17,7 @@ function addOvertime(req, res, con) {
     } else {
         const idotartam = Math.abs(new Date(end) - new Date(start)) / 36e5;
         addOvertime = `INSERT INTO overtime_records 
-                        (user_id, firstName, lastName, emea_number, csoport, honap, tipus, kezdete, vege, idotartam, felh_tulora, indok, megjegyzes) 
+                        (user_id, firstName, lastName, emea_number, csoport, honap, tipus, kezdete, vege, idotartam, csuszokeret, indok, megjegyzes) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         queryParams = [id, firstName, lastName, emea, group, month, type, start, end, idotartam, idotartam, reason, comment];
     }
