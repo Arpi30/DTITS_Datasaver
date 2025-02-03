@@ -67,6 +67,6 @@ td{
   border: 1px solid #fc99cc;
   color: #c40266;
 }
-.incraseAndDecreaseButton{
+.incraseAndDecreaseButton, .actionButton{
   background: transparent !important;
 }

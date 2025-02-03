@@ -5,9 +5,6 @@ function updateData(req, res, con) {
     const totalHours = calculateOvertime.calculateOvertime(start, end, type);
     let updateQuery;
     let queryParams;
-
-    console.log(start);
-    console.log(end);
     
 
     if (type === 'Készenlét') {
@@ -36,8 +33,8 @@ function updateData(req, res, con) {
                 kezdete = ?,
                 vege = ?,
                 idotartam = TIMESTAMPDIFF(HOUR, ?, ?),
-                felh_tulora = TIMESTAMPDIFF(HOUR, ?, ?),
-                tulora = 0,
+                csuszokeret = TIMESTAMPDIFF(HOUR, ?, ?),
+                negativ_ido = 0,
                 indok = ?,
                 megjegyzes = ?
             WHERE
@@ -54,7 +51,14 @@ function updateData(req, res, con) {
             return res.status(500).json({ message: "Hiba az adatok módosítása közben." });
         }
 
-        return res.status(200).json({message: "Az adatok sikeresen módosítva", data: id})
+        con.query("SELECT * FROM overtime_records WHERE id = ? AND emea_number = ?", [id, emea], (err, updatedRecord) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ message: "Hiba az adatok lekérése közben." });
+            }
+    
+            return res.status(200).json({message: "Sikeres módosítás", data: updatedRecord[0]});
+        });
 
     });
 }
