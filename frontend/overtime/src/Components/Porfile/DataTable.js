@@ -7,7 +7,19 @@ import { IoMdRefresh } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 
-export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRowsWithCheckbox, deleteItemHandler, deleteItemsHandler, approveItem, showHandler, handleDecrease, handleIncrease, isSelectedRows }) => {
+export const DataTable = ({ user, 
+                            res, 
+                            selectedRows, 
+                            selectedAllRows, 
+                            selectedRowsWithCheckbox, 
+                            deleteItemHandler, 
+                            deleteItemsHandler, 
+                            approveItem, 
+                            showHandler, 
+                            handleDecrease, 
+                            handleIncrease, 
+                            isSelectedRows,
+                            isAllSelected }) => {
     
     
     const columns = [
@@ -44,9 +56,9 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                 return {};
         }
     };
-
+    
     const enabledActionButton = (row) => {
-        return !isSelectedRows.some(selected => selected.id === row.id)
+        return !isSelectedRows.some(selected => selected.id === row.id) || isAllSelected
     }
     
     return (
@@ -107,7 +119,7 @@ export const DataTable = ({user, res, selectedRows, selectedAllRows, selectedRow
                                         </td>
                                     );
                                 })}
-                                <td>{row.statusz == "Pending" && <button disabled={enabledActionButton(row)} className="actionButton"><MdModeEdit  onClick={showHandler} size={15}/></button>}</td>
+                                <td>{row.statusz == "Pending" && <button disabled={enabledActionButton(row) } className="actionButton"><MdModeEdit  onClick={showHandler} size={15}/></button>}</td>
                                 <td>{row.statusz == "Pending" && <button disabled={enabledActionButton(row)} className="actionButton"><MdDelete onClick={deleteItemHandler} size={15}/></button>}</td>
                                 <td>{user.role == "admin" && (row.statusz === "Pending" ? <button disabled={enabledActionButton(row)} className="actionButton"><MdDoneAll onClick={approveItem} size={15}/></button> : <button className="actionButton"><IoMdRefresh onClick={approveItem} size={15}/></button>)}</td>
                             </tr>

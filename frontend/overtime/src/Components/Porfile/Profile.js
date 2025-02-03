@@ -287,6 +287,7 @@ export const Profile = ({user}) => {
                         selectedRowsWithCheckbox={selectedRowsWithCheckbox}
                         approveItem={approveItem}
                         isSelectedRows={selectedRows}
+                        isAllSelected={isAllSelected}
                         deleteItemHandler={() => {
                             selectedRows.length > 1 ? setMessage({message: "Egyszerre csak egy sort lehet törölni!"}) : deleteHandler(selectedRows[0])
                         }}
